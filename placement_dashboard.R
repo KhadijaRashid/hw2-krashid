@@ -122,7 +122,7 @@ sidebar <- dashboardSidebar(width = 350,
                 choices = sort(unique(child.data$All_ethnicities)),
                 multiple = TRUE,
                 selectize = TRUE,
-                selected = c("African_American", "White")),
+                selected = c("African American")),
                        
     # Year Selection ----------------------------------------------
     sliderInput("YearIn",
@@ -233,17 +233,18 @@ server <- function(input, output) {
     # })
     
     #    subsetting and agreegating data for plots
-    child_subset_g <- reactive({
-      req(input$genderSelect)
-      child.agg <- child.data %>%
-        group_by(get(input$genderSelect)) %>%
-        summarise(count = n())
-      return(child.agg)
-    })
+    # child_subset_g <- reactive({
+    #   req(input$genderSelect)
+    #   child.agg <- child.data %>%
+    #     group_by(get(input$genderSelect)) %>%
+    #     summarise(count = n())
+    #   return(child.agg)
+    # })
     
     # Create scatterplot  --
     output$plot_age <- renderPlotly({
-      ggplot(data = child_subset_g, aes_string(x = input$Age, y = input$count)) +
+      sw <- swInput()
+      ggplot(data = child.data, aes_string(x = sw$Age, y = sw$Year)) +
         # color = input$z)) +
         geom_point() +#(aes(x = input$Year, y = input$Age, size = 10)) +
         geom_smooth(se = FALSE, show.legend = FALSE) +
